@@ -1,0 +1,8 @@
+Debug/
+Release/
+x64/
+x86/
+Asteroids.vcxproj
+Asteroids.vcxproj.filters
+Asteroids.vcxproj.user
+*.dll
