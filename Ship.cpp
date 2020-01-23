@@ -1,20 +1,20 @@
-#include "Ship.h"
 #include <cmath>
+#include "Ship.h"
+#include "Assets.h"
+#include "UtilsForVector.h"
 
 Ship::Ship()
 {	
-	m_texture.loadFromFile("res\\img\\Ship.png");
-	setTexture(m_texture);
+	m_texture.loadFromImage(Assets::Instance().getShip());
+	m_sprite.setTexture(m_texture);
 	setPosition(300, 500);
-	setOrigin(8, 13);
+	sf::IntRect textureRect = m_sprite.getTextureRect();
+	setOrigin(textureRect.width / 2, textureRect.height / 2);
 	m_vectorSpeed = { 0, 0 };
 }
 
 void Ship::update(float deltaTime)
 {
-	if (m_bullet.isAlive())
-		m_bullet.update(deltaTime);
-
 	moveShip(m_vectorSpeed * deltaTime);
 
 	m_vectorSpeed -= m_vectorSpeed * kResistance;
@@ -22,9 +22,7 @@ void Ship::update(float deltaTime)
 
 void Ship::addForce()
 {
-	float valueRotation = getRotation() * 3.14f / 180;
-	sf::Vector2f vectorDirection = sf::Vector2f(sin(valueRotation), -cos(valueRotation));
-	sf::Vector2f newVectorSpeed = m_vectorSpeed + vectorDirection * kAcceleration;
+	sf::Vector2f newVectorSpeed = m_vectorSpeed + vectorDirection(getRotation()) * kAcceleration;
 
 	if (abs(newVectorSpeed.x) < kMaxSpeed && abs(newVectorSpeed.y) < kMaxSpeed)
 		m_vectorSpeed = newVectorSpeed;
@@ -44,20 +42,16 @@ void Ship::moveShip(sf::Vector2f vectorSpeed)
 	setPosition(shipPosition);
 }
 
-void Ship::fire()
+void Ship::fire(Bullet& bullet)
 {
-	m_bullet.setPosition(getPosition());
-
-	float valueRotation = getRotation() * 3.14f / 180;
-	sf::Vector2f vectorDirection = sf::Vector2f(sin(valueRotation), -cos(valueRotation));
-
-	m_bullet.setSpeed(vectorDirection);
-	m_bullet.setRotation(getRotation());
-	m_bullet.wakeUp();
+	bullet.setPosition(getPosition());
+	bullet.setRotation(getRotation());
+	bullet.wakeUp();
 }
 
-
-Bullet* Ship::getBullet()
+void Ship::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
-	return &m_bullet;
+	states.transform *= getTransform();
+
+	target.draw(m_sprite, states);
 }

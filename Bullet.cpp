@@ -1,13 +1,16 @@
 #include "Bullet.h"
 #include "UtilsForVector.h"
+#include "Assets.h"
 
 Bullet::Bullet()
 {
-	m_texture.loadFromFile("res\\img\\Bullet.png");
-	setTexture(m_texture);
-	setOrigin(1,2);
+	m_texture.loadFromImage(Assets::Instance().getBullet());
+	m_sprite.setTexture(m_texture);
+	sf::IntRect textureRect = m_sprite.getTextureRect();
+	setOrigin(textureRect.width / 2, textureRect.height / 2);
 	m_isAlive = false;
 	m_distance = 0;
+	m_vectorSpeed = { 0, 0 };
 }
 
 Bullet::~Bullet()
@@ -17,12 +20,15 @@ Bullet::~Bullet()
 
 void Bullet::update(float deltaTime)
 {
-	moveBullet(m_vectorSpeed);
+	if (isAlive())
+	{
+		moveBullet(m_vectorSpeed);
 
-	m_distance += lengthVector(m_vectorSpeed);
+		m_distance += lengthVector(m_vectorSpeed);
 
-	if (m_distance > kMaxDistance)
-		die();
+		if (m_distance > kMaxDistance)
+			die();
+	}
 }
 
 void Bullet::moveBullet(sf::Vector2f vectorSpeed)
@@ -39,7 +45,7 @@ void Bullet::moveBullet(sf::Vector2f vectorSpeed)
 	setPosition(bulletPosition);
 }
 
-bool Bullet::isAlive()
+bool Bullet::isAlive() const
 {
 	return m_isAlive;
 }
@@ -48,6 +54,7 @@ void Bullet::wakeUp()
 {
 	m_isAlive = true;
 	m_distance = 0.0f;
+	m_vectorSpeed = vectorDirection(getRotation()) * kAcceleration;
 }
 
 void Bullet::die()
@@ -55,7 +62,12 @@ void Bullet::die()
 	m_isAlive = false;
 }
 
-void Bullet::setSpeed(sf::Vector2f direction)
+void Bullet::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
-	m_vectorSpeed = direction * 10.f;
+	if (isAlive())
+	{
+		states.transform *= getTransform();
+
+		target.draw(m_sprite, states);
+	}
 }

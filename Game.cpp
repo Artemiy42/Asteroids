@@ -17,7 +17,6 @@ Game::~Game()
 		delete *it;
 	}
 
-	delete m_ship;
 	delete m_renderWindow;
 }
 
@@ -29,7 +28,6 @@ void Game::setupSystem()
 		"Asteroids",
 		sf::Style::Titlebar | sf::Style::Close);
 	m_renderWindow->setFramerateLimit(60);
-	m_ship = new Ship();
 
 	for (int i = 0; i < 10; i++)
 	{
@@ -69,10 +67,8 @@ bool Game::loop()
 void Game::render()
 {
 	m_renderWindow->clear();
-	m_renderWindow->draw(*m_ship);
-	
-	if (m_ship->getBullet()->isAlive())
-		m_renderWindow->draw(*(m_ship->getBullet()));
+	m_renderWindow->draw(m_ship);
+	m_renderWindow->draw(m_bullet);
 	
 	for (std::list<Asteroid*>::iterator it = m_asteroids.begin(); it != m_asteroids.end(); it++)
 	{
@@ -84,7 +80,8 @@ void Game::render()
 
 void Game::update(float deltaTime)
 {
-	m_ship->update(deltaTime);
+	m_ship.update(deltaTime);
+	m_bullet.update(deltaTime);
 
 	for (std::list<Asteroid*>::iterator it = m_asteroids.begin(); it != m_asteroids.end(); it++)
 	{
@@ -92,30 +89,30 @@ void Game::update(float deltaTime)
 	}
 	
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Left))
-		m_ship->rotate(-m_ship->kAngleRotation);
+		m_ship.rotate(-m_ship.kAngleRotation);
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Right))
-		m_ship->rotate(m_ship->kAngleRotation);
+		m_ship.rotate(m_ship.kAngleRotation);
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Up))
-		m_ship->addForce();
+		m_ship.addForce();
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space))
-		m_ship->fire();
-
+		m_ship.fire(m_bullet);
+	/*
 	std::list<Asteroid*>::iterator it = m_asteroids.begin();
 	while (it != m_asteroids.end())
 	{
-		if (Collision::PixelPerfectTest(*m_ship, **it))
+		if (Collision::PixelPerfectTest(m_ship, **it))
 		{
 			std::cout << "Collision ship with asteroid" << std::endl;
 		}
 		
-		if (m_ship->getBullet()->getGlobalBounds().intersects((*it)->getGlobalBounds()))
+		if (m_bullet.get getGlobalBounds().intersects((*it)->getGlobalBounds()))
 		{
 			m_asteroids.erase(it++);
 			m_asteroids.push_back(new Asteroid());
 		}
 		else
 			++it;
-	}
+	}*/
 
 	
 }

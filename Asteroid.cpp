@@ -1,13 +1,12 @@
 #include "Asteroid.h"
+#include "UtilsForVector.h"
+#include "Assets.h"
 
 Asteroid::Asteroid()
 {
-	m_texture.loadFromFile("res\\img\\Asteroid.png");
-	setTexture(m_texture);
-	setPosition(20, 100);
-	float valueRotation = (rand() % 360) * 3.14f / 180;
-	sf::Vector2f vectorDirection = sf::Vector2f(sin(valueRotation), -cos(valueRotation));
-	m_vectorSpeed = vectorDirection * float(rand() % 100 + 100);
+	m_texture.loadFromImage(Assets::Instance().getAsteroid());
+	m_sprite.setTexture(m_texture);
+	m_vectorSpeed = vectorDirection(rand() % 360) * float(rand() % (kMaxSpeed - kMinSpped) + kMinSpped);
 }
 
 Asteroid::~Asteroid()
@@ -32,4 +31,11 @@ void Asteroid::moveAsteroid(sf::Vector2f vectorSpeed)
 	if (asteroidPosition.y < 0) asteroidPosition.y = 800;
 
 	setPosition(asteroidPosition);
+}
+
+void Asteroid::draw(sf::RenderTarget& target, sf::RenderStates states) const
+{
+	states.transform *= getTransform();
+
+	target.draw(m_sprite, states);
 }
