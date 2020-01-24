@@ -14,12 +14,14 @@ public:
 	void load();
 	sf::Image getShip();
 	sf::Image getBullet();
-	sf::Image getAsteroid();
+	sf::Image getCatAsteroidSmall();
+	sf::Image getCatAsteroidBig();
 
 private:
 	sf::Image m_ship;
 	sf::Image m_bullet;
-	sf::Image m_asteroid;
+	sf::Image m_catAsteroidSmall;
+	sf::Image m_catAsteroidBig;
 
 private:
 	Assets() {};

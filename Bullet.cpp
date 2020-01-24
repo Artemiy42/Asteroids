@@ -5,12 +5,12 @@
 Bullet::Bullet()
 {
 	m_texture.loadFromImage(Assets::Instance().getBullet());
-	m_sprite.setTexture(m_texture);
-	sf::IntRect textureRect = m_sprite.getTextureRect();
-	setOrigin(textureRect.width / 2, textureRect.height / 2);
+	setTexture(m_texture);
+	sf::IntRect textureRect = getTextureRect();
+	setOrigin(textureRect.width / 2.f, textureRect.height / 2.f);
 	m_isAlive = false;
-	m_distance = 0;
-	m_vectorSpeed = { 0, 0 };
+	m_distance = 0.0f;
+	m_vectorSpeed = { 0.0f, 0.0f };
 }
 
 Bullet::~Bullet()
@@ -20,7 +20,7 @@ Bullet::~Bullet()
 
 void Bullet::update(float deltaTime)
 {
-	if (isAlive())
+	if (m_isAlive)
 	{
 		moveBullet(m_vectorSpeed);
 
@@ -62,12 +62,10 @@ void Bullet::die()
 	m_isAlive = false;
 }
 
-void Bullet::draw(sf::RenderTarget& target, sf::RenderStates states) const
+void Bullet::render(sf::RenderWindow*& renderWindow)
 {
-	if (isAlive())
+	if (m_isAlive)
 	{
-		states.transform *= getTransform();
-
-		target.draw(m_sprite, states);
+		renderWindow->draw(*this);
 	}
 }

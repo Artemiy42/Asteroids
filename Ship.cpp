@@ -6,11 +6,13 @@
 Ship::Ship()
 {	
 	m_texture.loadFromImage(Assets::Instance().getShip());
-	m_sprite.setTexture(m_texture);
+	setTexture(m_texture);
 	setPosition(300, 500);
-	sf::IntRect textureRect = m_sprite.getTextureRect();
-	setOrigin(textureRect.width / 2, textureRect.height / 2);
+	sf::IntRect textureRect = getTextureRect();
+	setOrigin(textureRect.width / 2.f, textureRect.height / 2.f);
 	m_vectorSpeed = { 0, 0 };
+	m_timeCooldown = 0;
+	m_isFire = false;
 }
 
 void Ship::update(float deltaTime)
@@ -18,6 +20,22 @@ void Ship::update(float deltaTime)
 	moveShip(m_vectorSpeed * deltaTime);
 
 	m_vectorSpeed -= m_vectorSpeed * kResistance;
+	
+	if (m_isFire)
+	{
+		if (m_timeCooldown < kCooldownFire)
+			m_timeCooldown += deltaTime;
+		else
+		{
+			m_isFire = false;
+			m_timeCooldown = 0;
+		}
+	}
+}
+
+void Ship::render(sf::RenderWindow*& renderWindow)
+{
+	renderWindow->draw(*this);
 }
 
 void Ship::addForce()
@@ -42,16 +60,18 @@ void Ship::moveShip(sf::Vector2f vectorSpeed)
 	setPosition(shipPosition);
 }
 
-void Ship::fire(Bullet& bullet)
+bool Ship::isFire()
 {
-	bullet.setPosition(getPosition());
-	bullet.setRotation(getRotation());
-	bullet.wakeUp();
+	return m_isFire;
 }
 
-void Ship::draw(sf::RenderTarget& target, sf::RenderStates states) const
+void Ship::fire(Bullet& bullet)
 {
-	states.transform *= getTransform();
-
-	target.draw(m_sprite, states);
+	if (!m_isFire)
+	{
+		bullet.setPosition(getPosition());
+		bullet.setRotation(getRotation());
+		bullet.wakeUp();
+		m_isFire = true;
+	}
 }

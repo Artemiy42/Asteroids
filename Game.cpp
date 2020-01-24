@@ -12,11 +12,6 @@ Game::Game()
 
 Game::~Game()
 {
-	for (std::list<Asteroid*>::iterator it = m_asteroids.begin(); it != m_asteroids.end(); it++)
-	{
-		delete *it;
-	}
-
 	delete m_renderWindow;
 }
 
@@ -28,11 +23,6 @@ void Game::setupSystem()
 		"Asteroids",
 		sf::Style::Titlebar | sf::Style::Close);
 	m_renderWindow->setFramerateLimit(60);
-
-	for (int i = 0; i < 10; i++)
-	{
-		m_asteroids.push_back(new Asteroid());
-	}
 }
 
 void Game::initialize()
@@ -48,9 +38,9 @@ bool Game::loop()
 	clock_t clockNew = clock();
 	clock_t deltaClock = clockNew - m_clockLastFrame;
 	float deltaTime = float(deltaClock) / CLOCKS_PER_SEC;
-	
+
 	m_clockLastFrame = clockNew;
-	
+
 	sf::Event event;
 	while (m_renderWindow->pollEvent(event))
 	{
@@ -61,33 +51,24 @@ bool Game::loop()
 	render();
 	update(deltaTime);
 
-	return true;
+	return m_isGameActive;
 }
 
 void Game::render()
 {
 	m_renderWindow->clear();
-	m_renderWindow->draw(m_ship);
-	m_renderWindow->draw(m_bullet);
-	
-	for (std::list<Asteroid*>::iterator it = m_asteroids.begin(); it != m_asteroids.end(); it++)
-	{
-		m_renderWindow->draw(**it);
-	}
-
+	m_ship.render(m_renderWindow);
+	m_magazine.render(m_renderWindow);
+	m_asteroids.render(m_renderWindow);
 	m_renderWindow->display();
 }
 
 void Game::update(float deltaTime)
 {
 	m_ship.update(deltaTime);
-	m_bullet.update(deltaTime);
+	m_magazine.update(deltaTime);
+	m_asteroids.update(deltaTime);
 
-	for (std::list<Asteroid*>::iterator it = m_asteroids.begin(); it != m_asteroids.end(); it++)
-	{
-		(*it)->update(deltaTime);
-	}
-	
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Left))
 		m_ship.rotate(-m_ship.kAngleRotation);
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Right))
@@ -95,26 +76,11 @@ void Game::update(float deltaTime)
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Up))
 		m_ship.addForce();
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space))
-		m_ship.fire(m_bullet);
-	/*
-	std::list<Asteroid*>::iterator it = m_asteroids.begin();
-	while (it != m_asteroids.end())
-	{
-		if (Collision::PixelPerfectTest(m_ship, **it))
-		{
-			std::cout << "Collision ship with asteroid" << std::endl;
-		}
-		
-		if (m_bullet.get getGlobalBounds().intersects((*it)->getGlobalBounds()))
-		{
-			m_asteroids.erase(it++);
-			m_asteroids.push_back(new Asteroid());
-		}
-		else
-			++it;
-	}*/
-
+		m_ship.fire(m_magazine.getNextBullet());
 	
+	m_asteroids.intersects(m_ship, m_magazine);
+	
+	m_isGameActive = m_asteroids.hasAliveAsteroid();
 }
 
 void Game::shutdown()

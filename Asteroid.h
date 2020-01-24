@@ -2,20 +2,31 @@
 
 #include <SFML\Graphics.hpp>
 
-class Asteroid : public sf::Drawable, public sf::Transformable
+enum class AsteroidType
+{
+	Small,
+	Big
+};
+
+class Asteroid : public sf::Sprite
 {
 public:
 	const int kMaxSpeed = 250;
 	const int kMinSpped = 100;
 
 	Asteroid();
+	Asteroid(AsteroidType type, sf::Vector2f position);
 	~Asteroid();
 	void update(float deltaTime);
+	void render(sf::RenderWindow*& renderWindow);
 	void moveAsteroid(sf::Vector2f vectorSpeed);
-	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
+	AsteroidType getType();
 
 private:
-	sf::Sprite m_sprite;
 	sf::Texture m_texture;
 	sf::Vector2f m_vectorSpeed;
+	AsteroidType m_type;
+
+private:
+	sf::Image getImageByType(AsteroidType type);
 };

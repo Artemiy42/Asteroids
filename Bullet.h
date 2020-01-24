@@ -2,10 +2,10 @@
 
 #include <SFML/Graphics.hpp>
 
-class Bullet : public sf::Drawable, public sf::Transformable
+class Bullet : public sf::Sprite
 {
 public:
-	const float kMaxDistance = 500.0f;
+	const float kMaxDistance = 800.0f;
 	const float kAcceleration = 10.0f;
 	
 	Bullet();
@@ -15,10 +15,9 @@ public:
 	bool isAlive() const;
 	void wakeUp();
 	void die();
-	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
+	void render(sf::RenderWindow*& renderWindow);
 
 private:
-	sf::Sprite m_sprite;
 	sf::Texture m_texture;
 	sf::Vector2f m_vectorSpeed;
 	float m_distance;
