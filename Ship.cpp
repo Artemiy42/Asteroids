@@ -52,10 +52,10 @@ void Ship::moveShip(sf::Vector2f vectorSpeed)
 
 	shipPosition += vectorSpeed;
 
-	if (shipPosition.x > 800) shipPosition.x = 0;
-	if (shipPosition.x < 0)	shipPosition.x = 800;
-	if (shipPosition.y > 800) shipPosition.y = 0;
-	if (shipPosition.y < 0) shipPosition.y = 800;
+	if (shipPosition.x > 1000) shipPosition.x = 0;
+	if (shipPosition.x < 0)	shipPosition.x = 1000;
+	if (shipPosition.y > 1000) shipPosition.y = 0;
+	if (shipPosition.y < 0) shipPosition.y = 1000;
 	
 	setPosition(shipPosition);
 }

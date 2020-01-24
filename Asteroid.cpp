@@ -7,8 +7,10 @@ Asteroid::Asteroid()
 	m_type = AsteroidType(rand() % 2);
 	m_texture.loadFromImage(getImageByType(m_type));
 	setTexture(m_texture);
-	setPosition(float(rand() % 800), float(rand() % 800));
+	setPosition(float(rand() % 1000), float(rand() % 1000));
 	m_vectorSpeed = vectorDirection(rand() % 360) * float(rand() % (kMaxSpeed - kMinSpped) + kMinSpped);
+	sf::IntRect textureRect = getTextureRect();
+	setOrigin(textureRect.width / 2.f, textureRect.height / 2.f);
 }
 
 Asteroid::Asteroid(AsteroidType type, sf::Vector2f position)
@@ -41,10 +43,10 @@ void Asteroid::moveAsteroid(sf::Vector2f vectorSpeed)
 
 	asteroidPosition += vectorSpeed;
 
-	if (asteroidPosition.x > 800) asteroidPosition.x = 0;
-	if (asteroidPosition.x < 0)	asteroidPosition.x = 800;
-	if (asteroidPosition.y > 800) asteroidPosition.y = 0;
-	if (asteroidPosition.y < 0) asteroidPosition.y = 800;
+	if (asteroidPosition.x > 1000) asteroidPosition.x = 0;
+	if (asteroidPosition.x < 0)	asteroidPosition.x = 1000;
+	if (asteroidPosition.y > 1000) asteroidPosition.y = 0;
+	if (asteroidPosition.y < 0) asteroidPosition.y = 1000;
 
 	setPosition(asteroidPosition);
 }

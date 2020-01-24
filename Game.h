@@ -31,4 +31,7 @@ private:
 	Ship m_ship;
 	Magazine m_magazine;
 	ArrayAsteroids m_asteroids;
+
+	sf::View m_view;
+	sf::RectangleShape border;
 };

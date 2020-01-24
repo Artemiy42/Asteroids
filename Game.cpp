@@ -8,6 +8,12 @@ Game::Game()
 	m_isGameActive = true;
 	m_clockLastFrame = 0;
 	m_renderWindow = nullptr;
+	m_view = sf::View(sf::Vector2f(0.f, 0.f), sf::Vector2f(800.f, 800.f));
+
+	border.setSize(sf::Vector2f(1000, 1000));
+	border.setPosition(0, 0);
+	border.setOutlineThickness(5);
+	border.setFillColor(sf::Color::Black);
 }
 
 Game::~Game()
@@ -21,7 +27,7 @@ void Game::setupSystem()
 	m_renderWindow = new sf::RenderWindow(
 		sf::VideoMode(800, 800),
 		"Asteroids",
-		sf::Style::Titlebar | sf::Style::Close);
+		sf::Style::Titlebar | sf::Style::Close | sf::Style::Resize);
 	m_renderWindow->setFramerateLimit(60);
 }
 
@@ -46,6 +52,11 @@ bool Game::loop()
 	{
 		if (event.type == sf::Event::Closed)
 			m_renderWindow->close();
+		else if (event.type == sf::Event::Resized)
+		{
+			float aspectRadio = float(m_renderWindow->getSize().x) / float(m_renderWindow->getSize().y);
+			m_view.setSize(800 * aspectRadio, 800);
+		}
 	}
 
 	render();
@@ -57,6 +68,8 @@ bool Game::loop()
 void Game::render()
 {
 	m_renderWindow->clear();
+	m_renderWindow->setView(m_view);
+	m_renderWindow->draw(border);
 	m_ship.render(m_renderWindow);
 	m_magazine.render(m_renderWindow);
 	m_asteroids.render(m_renderWindow);
@@ -78,8 +91,8 @@ void Game::update(float deltaTime)
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space))
 		m_ship.fire(m_magazine.getNextBullet());
 	
+	m_view.setCenter(m_ship.getPosition());
 	m_asteroids.intersects(m_ship, m_magazine);
-	
 	m_isGameActive = m_asteroids.hasAliveAsteroid();
 }
 

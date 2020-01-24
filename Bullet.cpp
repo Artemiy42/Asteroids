@@ -37,10 +37,10 @@ void Bullet::moveBullet(sf::Vector2f vectorSpeed)
 
 	bulletPosition += vectorSpeed;
 
-	if (bulletPosition.x > 800) bulletPosition.x = 0;
-	if (bulletPosition.x < 0)	bulletPosition.x = 800;
-	if (bulletPosition.y > 800) bulletPosition.y = 0;
-	if (bulletPosition.y < 0) bulletPosition.y = 800;
+	if (bulletPosition.x > 1000) bulletPosition.x = 0;
+	if (bulletPosition.x < 0)	bulletPosition.x = 1000;
+	if (bulletPosition.y > 1000) bulletPosition.y = 0;
+	if (bulletPosition.y < 0) bulletPosition.y = 1000;
 
 	setPosition(bulletPosition);
 }
