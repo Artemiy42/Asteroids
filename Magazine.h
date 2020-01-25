@@ -1,13 +1,11 @@
 #pragma once
 
 #include "Bullet.h"
+#include "Settings.h"
 
 class Magazine
 {
 public:
-	const unsigned int kMaxQuantityBullet = 20;
-	const unsigned int kDefaultQuantityBullet = 4;
-
 	Magazine();
 	Magazine(unsigned int amount);
 	~Magazine();

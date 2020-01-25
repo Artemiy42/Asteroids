@@ -6,11 +6,11 @@
 class Ship : public sf::Sprite
 {
 public:
-	const float kResistance = 0.009f;
-	const float kAcceleration = 10.0f;
-	const float kMaxSpeed = 800.0f;
-	const float kAngleRotation = 3.0f;
-	const float kCooldownFire = 0.2f;
+	static const float kResistance;
+	static const float kAccelerationShip;
+	static const float kMaxSpeedShip;
+	static const float kAngleRotation;
+	static const float kCooldownFire;
 
 public:
 	Ship();

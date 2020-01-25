@@ -2,14 +2,27 @@
 #include "Ship.h"
 #include "Assets.h"
 #include "UtilsForVector.h"
+#include "Settings.h"
+
+const float Ship::kResistance = 0.009f;
+const float Ship::kAccelerationShip = 10.0f;
+const float Ship::kMaxSpeedShip = 800.0f;
+const float Ship::kAngleRotation = 3.0f;
+const float Ship::kCooldownFire = 0.2f;
 
 Ship::Ship()
 {	
 	m_texture.loadFromImage(Assets::Instance().getShip());
 	setTexture(m_texture);
-	setPosition(300, 500);
+	
 	sf::IntRect textureRect = getTextureRect();
 	setOrigin(textureRect.width / 2.f, textureRect.height / 2.f);
+
+	sf::Vector2f mapSize = Settings::Instance().getMapSize();
+	mapSize.x /= 2;
+	mapSize.y /= 2;
+	setPosition(mapSize);
+	
 	m_vectorSpeed = { 0, 0 };
 	m_timeCooldown = 0;
 	m_isFire = false;
@@ -40,9 +53,9 @@ void Ship::render(sf::RenderWindow*& renderWindow)
 
 void Ship::addForce()
 {
-	sf::Vector2f newVectorSpeed = m_vectorSpeed + vectorDirection(getRotation()) * kAcceleration;
+	sf::Vector2f newVectorSpeed = m_vectorSpeed + vectorDirection(getRotation()) * kAccelerationShip;
 
-	if (abs(newVectorSpeed.x) < kMaxSpeed && abs(newVectorSpeed.y) < kMaxSpeed)
+	if (abs(newVectorSpeed.x) < kMaxSpeedShip && abs(newVectorSpeed.y) < kMaxSpeedShip)
 		m_vectorSpeed = newVectorSpeed;
 }
 
@@ -67,11 +80,8 @@ bool Ship::isFire()
 
 void Ship::fire(Bullet& bullet)
 {
-	if (!m_isFire)
-	{
-		bullet.setPosition(getPosition());
-		bullet.setRotation(getRotation());
-		bullet.wakeUp();
-		m_isFire = true;
-	}
+	bullet.setPosition(getPosition());
+	bullet.setRotation(getRotation());
+	bullet.wakeUp();
+	m_isFire = true;
 }

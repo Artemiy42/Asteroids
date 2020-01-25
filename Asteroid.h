@@ -11,8 +11,8 @@ enum class AsteroidType
 class Asteroid : public sf::Sprite
 {
 public:
-	const int kMaxSpeed = 250;
-	const int kMinSpped = 100;
+	static const int kMaxSpeed = 350;
+	static const int kMinSpped = 100;
 
 	Asteroid();
 	Asteroid(AsteroidType type, sf::Vector2f position);

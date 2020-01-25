@@ -7,7 +7,7 @@ ArrayAsteroids::ArrayAsteroids()
 {
 	m_hasAliveAsteroid = true;
 	
-	for (int i = 0; i < kDefaultQuantityAsteroids; i++)
+	for (int i = 0; i < Settings::Instance().getNumberOfAsteroids(); i++)
 	{
 		m_asteroids.push_back(new Asteroid());
 	}
@@ -16,9 +16,9 @@ ArrayAsteroids::ArrayAsteroids()
 
 ArrayAsteroids::ArrayAsteroids(unsigned int amount)
 {
-	if (amount > kMaxQuantityAsteroids)
+	if (amount > Settings::kMaxNumberOfAsteroids)
 	{
-		amount = kMaxQuantityAsteroids;
+		amount = Settings::kMaxNumberOfAsteroids;
 	}
 	
 	m_hasAliveAsteroid = true;

@@ -2,6 +2,9 @@
 #include "UtilsForVector.h"
 #include "Assets.h"
 
+const float Bullet::kMaxDistance = 800.0f;
+const float Bullet::kAccelerationBullet = 10.0f;
+
 Bullet::Bullet()
 {
 	m_texture.loadFromImage(Assets::Instance().getBullet());
@@ -38,7 +41,7 @@ void Bullet::moveBullet(sf::Vector2f vectorSpeed)
 	bulletPosition += vectorSpeed;
 
 	if (bulletPosition.x > 1000) bulletPosition.x = 0;
-	if (bulletPosition.x < 0)	bulletPosition.x = 1000;
+	if (bulletPosition.x < 0) bulletPosition.x = 1000;
 	if (bulletPosition.y > 1000) bulletPosition.y = 0;
 	if (bulletPosition.y < 0) bulletPosition.y = 1000;
 
@@ -54,7 +57,7 @@ void Bullet::wakeUp()
 {
 	m_isAlive = true;
 	m_distance = 0.0f;
-	m_vectorSpeed = vectorDirection(getRotation()) * kAcceleration;
+	m_vectorSpeed = vectorDirection(getRotation()) * kAccelerationBullet;
 }
 
 void Bullet::die()

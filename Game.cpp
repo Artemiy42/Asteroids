@@ -2,18 +2,13 @@
 #include <cstdlib>
 #include <iostream>
 #include "Collision.h"
+#include "Settings.h"
 
 Game::Game()
 {
 	m_isGameActive = true;
 	m_clockLastFrame = 0;
 	m_renderWindow = nullptr;
-	m_view = sf::View(sf::Vector2f(0.f, 0.f), sf::Vector2f(800.f, 800.f));
-
-	border.setSize(sf::Vector2f(1000, 1000));
-	border.setPosition(0, 0);
-	border.setOutlineThickness(5);
-	border.setFillColor(sf::Color::Black);
 }
 
 Game::~Game()
@@ -24,11 +19,20 @@ Game::~Game()
 void Game::setupSystem()
 {
 	srand(time(0));
+
+	sf::VideoMode videoMode = Settings::Instance().getVideoMode();
 	m_renderWindow = new sf::RenderWindow(
-		sf::VideoMode(800, 800),
+		videoMode,
 		"Asteroids",
 		sf::Style::Titlebar | sf::Style::Close | sf::Style::Resize);
 	m_renderWindow->setFramerateLimit(60);
+
+	m_view = sf::View(sf::Vector2f(0.f, 0.f), sf::Vector2f(videoMode.width, videoMode.height));
+
+	border.setSize(Settings::Instance().getMapSize());
+	border.setPosition(0, 0);
+	border.setOutlineThickness(5);
+	border.setFillColor(sf::Color::Black);
 }
 
 void Game::initialize()
@@ -55,7 +59,10 @@ bool Game::loop()
 		else if (event.type == sf::Event::Resized)
 		{
 			float aspectRadio = float(m_renderWindow->getSize().x) / float(m_renderWindow->getSize().y);
-			m_view.setSize(800 * aspectRadio, 800);
+			sf::Vector2f mapSize = Settings::Instance().getMapSize();
+			
+			mapSize.x *= aspectRadio;
+			m_view.setSize(mapSize);
 		}
 	}
 
@@ -89,7 +96,8 @@ void Game::update(float deltaTime)
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Up))
 		m_ship.addForce();
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space))
-		m_ship.fire(m_magazine.getNextBullet());
+ 		if (!m_ship.isFire())
+			m_ship.fire(m_magazine.getNextBullet());
 	
 	m_view.setCenter(m_ship.getPosition());
 	m_asteroids.intersects(m_ship, m_magazine);

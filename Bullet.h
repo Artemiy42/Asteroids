@@ -5,8 +5,8 @@
 class Bullet : public sf::Sprite
 {
 public:
-	const float kMaxDistance = 800.0f;
-	const float kAcceleration = 10.0f;
+	static const float kMaxDistance;
+	static const float kAccelerationBullet;
 	
 	Bullet();
 	~Bullet();

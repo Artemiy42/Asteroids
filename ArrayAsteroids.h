@@ -5,13 +5,10 @@
 #include "Asteroid.h"
 #include "Magazine.h"
 #include "Ship.h"
+#include "Settings.h"
 
 class ArrayAsteroids
 {
-public:
-	const unsigned int kMaxQuantityAsteroids = 100;
-	const unsigned int kDefaultQuantityAsteroids = 10;
-
 public:
 	ArrayAsteroids();
 	ArrayAsteroids(unsigned int amount);
