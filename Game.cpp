@@ -3,6 +3,7 @@
 #include <iostream>
 #include "Collision.h"
 #include "Settings.h"
+#include "Score.h"
 
 Game::Game()
 {
@@ -20,19 +21,23 @@ void Game::setupSystem()
 {
 	srand(time(0));
 
-	sf::VideoMode videoMode = Settings::Instance().getVideoMode();
 	m_renderWindow = new sf::RenderWindow(
-		videoMode,
+		Settings::Instance().getVideoMode(),
 		"Asteroids",
 		sf::Style::Titlebar | sf::Style::Close | sf::Style::Resize);
 	m_renderWindow->setFramerateLimit(60);
 
-	m_view = sf::View(sf::Vector2f(0.f, 0.f), sf::Vector2f(videoMode.width, videoMode.height));
+	sf::Vector2f videoModeSize = Settings::Instance().getSizeVideoMode();
+
+	m_view = sf::View(sf::Vector2f(0.f, 0.f), videoModeSize);
 
 	border.setSize(Settings::Instance().getMapSize());
 	border.setPosition(0, 0);
 	border.setOutlineThickness(5);
 	border.setFillColor(sf::Color::Black);
+
+	view2 = sf::View(sf::Vector2f(0.f, 0.f), videoModeSize);
+	view2.setCenter(sf::Vector2f(videoModeSize.x/2, videoModeSize.y/2));
 }
 
 void Game::initialize()
@@ -58,11 +63,9 @@ bool Game::loop()
 			m_renderWindow->close();
 		else if (event.type == sf::Event::Resized)
 		{
-			float aspectRadio = float(m_renderWindow->getSize().x) / float(m_renderWindow->getSize().y);
-			sf::Vector2f mapSize = Settings::Instance().getMapSize();
+			sf::Vector2f windowSize(m_renderWindow->getSize().x, m_renderWindow->getSize().y);
 			
-			mapSize.x *= aspectRadio;
-			m_view.setSize(mapSize);
+			m_view.setSize(windowSize);
 		}
 	}
 
@@ -80,6 +83,8 @@ void Game::render()
 	m_ship.render(m_renderWindow);
 	m_magazine.render(m_renderWindow);
 	m_asteroids.render(m_renderWindow);
+	m_renderWindow->setView(view2);
+	Score::Instance().render(m_renderWindow);
 	m_renderWindow->display();
 }
 
@@ -101,10 +106,10 @@ void Game::update(float deltaTime)
 	
 	m_view.setCenter(m_ship.getPosition());
 	m_asteroids.intersects(m_ship, m_magazine);
-	m_isGameActive = m_asteroids.hasAliveAsteroid();
+	m_isGameActive = m_ship.isAlive();
 }
 
 void Game::shutdown()
 {
-
+	
 }

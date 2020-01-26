@@ -26,11 +26,12 @@ Ship::Ship()
 	m_vectorSpeed = { 0, 0 };
 	m_timeCooldown = 0;
 	m_isFire = false;
+	m_isAlive = true;
 }
 
 void Ship::update(float deltaTime)
 {
-	moveShip(m_vectorSpeed * deltaTime);
+	move(m_vectorSpeed * deltaTime);
 
 	m_vectorSpeed -= m_vectorSpeed * kResistance;
 	
@@ -46,7 +47,7 @@ void Ship::update(float deltaTime)
 	}
 }
 
-void Ship::render(sf::RenderWindow*& renderWindow)
+void Ship::render(sf::RenderWindow* renderWindow)
 {
 	renderWindow->draw(*this);
 }
@@ -59,16 +60,17 @@ void Ship::addForce()
 		m_vectorSpeed = newVectorSpeed;
 }
 
-void Ship::moveShip(sf::Vector2f vectorSpeed)
+void Ship::move(sf::Vector2f vectorSpeed)
 {
 	sf::Vector2f shipPosition = getPosition();
+	sf::Vector2f mapSize = Settings::Instance().getMapSize();
 
 	shipPosition += vectorSpeed;
 
-	if (shipPosition.x > 1000) shipPosition.x = 0;
-	if (shipPosition.x < 0)	shipPosition.x = 1000;
-	if (shipPosition.y > 1000) shipPosition.y = 0;
-	if (shipPosition.y < 0) shipPosition.y = 1000;
+	if (shipPosition.x > mapSize.x) shipPosition.x = 0;
+	if (shipPosition.x < 0)	shipPosition.x = mapSize.x;
+	if (shipPosition.y > mapSize.y) shipPosition.y = 0;
+	if (shipPosition.y < 0) shipPosition.y = mapSize.y;
 	
 	setPosition(shipPosition);
 }
@@ -76,6 +78,16 @@ void Ship::moveShip(sf::Vector2f vectorSpeed)
 bool Ship::isFire()
 {
 	return m_isFire;
+}
+
+bool Ship::isAlive()
+{
+	return m_isAlive;
+}
+
+void Ship::die()
+{
+	m_isAlive = false;
 }
 
 void Ship::fire(Bullet& bullet)

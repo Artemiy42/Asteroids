@@ -30,6 +30,7 @@ public:
 	}
 
 	sf::VideoMode getVideoMode() { return m_videoMode; }
+	sf::Vector2f getSizeVideoMode() { return sf::Vector2f(m_videoMode.width, m_videoMode.height); }
 
 	void setMapSize(float mapWidth, float mapHeight)
 	{ 

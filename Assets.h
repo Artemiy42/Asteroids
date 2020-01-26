@@ -16,6 +16,7 @@ public:
 	sf::Image getBullet();
 	sf::Image getCatAsteroidSmall();
 	sf::Image getCatAsteroidBig();
+	sf::Font& getHyperspaceFont();
 
 private:
 	Assets() {};
@@ -28,5 +29,6 @@ private:
 	sf::Image m_bullet;
 	sf::Image m_catAsteroidSmall;
 	sf::Image m_catAsteroidBig;
+	sf::Font m_hyperSpaceFont;
 
 };

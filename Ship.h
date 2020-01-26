@@ -15,10 +15,12 @@ public:
 public:
 	Ship();
 	void update(float deltaTime);
-	void render(sf::RenderWindow*& renderWindow);
+	void render(sf::RenderWindow* renderWindow);
 	void addForce();
-	void moveShip(sf::Vector2f vectorSpeed);
+	void move(sf::Vector2f vectorSpeed);
 	bool isFire();
+	bool isAlive();
+	void die();
 	void fire(Bullet& bullet);
 
 private:
@@ -26,4 +28,5 @@ private:
 	sf::Vector2f m_vectorSpeed;
 	float m_timeCooldown;
 	bool m_isFire;
+	bool m_isAlive;
 };

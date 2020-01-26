@@ -1,5 +1,7 @@
 #pragma once
 
+#include <vector>
+
 #include "Bullet.h"
 #include "Settings.h"
 
@@ -11,14 +13,12 @@ public:
 	~Magazine();
 
 	void update(float deltaTime);
-	void render(sf::RenderWindow*& renderWindow);
+	void render(sf::RenderWindow* renderWindow);
 	Bullet& getNextBullet();
-	Bullet* getAllBullets();
-	unsigned int getAmountBullets();
+	std::vector<Bullet*> getAllBullets();
 
 private:
-	Bullet* m_bullets;
-	unsigned int m_amount;
+	std::vector<Bullet*> m_bullets;
 	unsigned int m_lastBullet;
 };
 

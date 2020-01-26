@@ -11,11 +11,11 @@ public:
 	Bullet();
 	~Bullet();
 	void update(float deltaTime);
-	void moveBullet(sf::Vector2f vectorSpeed);
+	void move(sf::Vector2f vectorSpeed);
 	bool isAlive() const;
 	void wakeUp();
 	void die();
-	void render(sf::RenderWindow*& renderWindow);
+	void render(sf::RenderWindow* renderWindow);
 
 private:
 	sf::Texture m_texture;

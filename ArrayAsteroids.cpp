@@ -2,6 +2,7 @@
 
 #include "ArrayAsteroids.h"
 #include "Collision.h"
+#include "Score.h"
 
 ArrayAsteroids::ArrayAsteroids()
 {
@@ -12,7 +13,6 @@ ArrayAsteroids::ArrayAsteroids()
 		m_asteroids.push_back(new Asteroid());
 	}
 }
-
 
 ArrayAsteroids::ArrayAsteroids(unsigned int amount)
 {
@@ -45,7 +45,7 @@ void ArrayAsteroids::update(float deltaTime)
 	}
 }
 
-void ArrayAsteroids::render(sf::RenderWindow*& renderWindow)
+void ArrayAsteroids::render(sf::RenderWindow* renderWindow)
 {
 	for (std::list<Asteroid*>::iterator it = m_asteroids.begin(); it != m_asteroids.end(); it++)
 	{
@@ -55,39 +55,80 @@ void ArrayAsteroids::render(sf::RenderWindow*& renderWindow)
 
 void ArrayAsteroids::intersects(Ship& ship, Magazine& magazine)
 {
-	std::list<Asteroid*>::iterator it = m_asteroids.begin();
-	Bullet* bulletArray = magazine.getAllBullets();
-	while (it != m_asteroids.end())
+	std::list<Asteroid*>::iterator itAsteroid = m_asteroids.begin();
+	//std::vector<Bullet*> bulletArray = magazine.getAllBullets();
+	
+	while (itAsteroid != m_asteroids.end())
 	{
 		bool isDelete = false;
 
-		if (Collision::PixelPerfectTest(ship, **it))
+		if (Collision::PixelPerfectTest(ship, **itAsteroid))
 		{
 			std::cout << "Collision ship with asteroid" << std::endl;
+		//	ship.die();
 		}
 
-		for (int indexBullet = 0; indexBullet < magazine.getAmountBullets(); indexBullet++)
+		for (std::list<Asteroid*>::iterator itOtherAsteroid = m_asteroids.begin(); itOtherAsteroid != m_asteroids.end(); itOtherAsteroid++)
 		{
-			if ((*it)->getGlobalBounds().intersects(bulletArray[indexBullet].getGlobalBounds()) && bulletArray[indexBullet].isAlive())
+			/*if ((*itAsteroid)->getGlobalBounds().intersects((*itOtherAsteroid)->getGlobalBounds()) && (*itOtherAsteroid)->isAlive())
 			{
 				std::cout << "Collision bullet with asteroid" << std::endl;
-				if ((*it)->getType() == AsteroidType::Big)
+
+				if ((*itAsteroid)->getType() == AsteroidType::Big)
 				{
-					m_asteroids.push_back(new Asteroid(AsteroidType::Small, (*it)->getPosition()));
-					m_asteroids.push_back(new Asteroid(AsteroidType::Small, (*it)->getPosition()));
+					m_asteroids.push_back(new Asteroid(AsteroidType::Small, (*itAsteroid)->getPosition()));
+					m_asteroids.push_back(new Asteroid(AsteroidType::Small, (*itAsteroid)->getPosition()));
 				}
-				
-				bulletArray[indexBullet].die();
-				it = m_asteroids.erase(it);
+
+				(*itBullet)->die();
+				itAsteroid = m_asteroids.erase(itAsteroid);
 				isDelete = true;
-				
+
 				break;
+			}*/
+		//	if (itOtherAsteroid != itAsteroid && (*itAsteroid)->getGlobalBounds().intersects((*itOtherAsteroid)->getGlobalBounds()))
+			if (itOtherAsteroid != itAsteroid && Collision::PixelPerfectTest(**itAsteroid, **itOtherAsteroid))
+			{
+				std::cout << "Collision asteroid with asteroid" << std::endl;
+				(*itAsteroid)->changeDirection((*itOtherAsteroid)->getGlobalBounds());
+				(*itOtherAsteroid)->changeDirection((*itAsteroid)->getGlobalBounds());
 			}
 		}
 
+		isDelete = intersectsWithBullet(itAsteroid, magazine);
+
 		if (!isDelete)
-			it++;
+			itAsteroid++;
 	}
+}
+
+bool ArrayAsteroids::intersectsWithBullet(std::list<Asteroid*>::iterator& itAsteroid, Magazine& magazine)
+{
+	bool isDelete = false;
+	std::vector<Bullet*> bulletArray = magazine.getAllBullets();
+
+	for (std::vector<Bullet*>::iterator itBullet = bulletArray.begin(); itBullet < bulletArray.end(); itBullet++)
+	{
+		if ((*itAsteroid)->getGlobalBounds().intersects((*itBullet)->getGlobalBounds()) && (*itBullet)->isAlive())
+		{
+			std::cout << "Collision bullet with asteroid" << std::endl;
+			
+			if ((*itAsteroid)->getType() == AsteroidType::Big)
+			{
+				m_asteroids.push_back(new Asteroid(AsteroidType::Small, (*itAsteroid)->getPosition()));
+				m_asteroids.push_back(new Asteroid(AsteroidType::Small, (*itAsteroid)->getPosition()));
+			}
+
+			(*itBullet)->die();
+			Score::Instance().addPoints((*itAsteroid)->getType());			
+			itAsteroid = m_asteroids.erase(itAsteroid);
+			isDelete = true;
+
+			break;
+		}
+	}
+	
+	return isDelete;
 }
 
 bool ArrayAsteroids::hasAliveAsteroid()

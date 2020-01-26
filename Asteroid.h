@@ -2,11 +2,7 @@
 
 #include <SFML\Graphics.hpp>
 
-enum class AsteroidType
-{
-	Small,
-	Big
-};
+#include "AsteroidType.h"
 
 class Asteroid : public sf::Sprite
 {
@@ -16,10 +12,11 @@ public:
 
 	Asteroid();
 	Asteroid(AsteroidType type, sf::Vector2f position);
-	~Asteroid();
+	~Asteroid() {};
 	void update(float deltaTime);
-	void render(sf::RenderWindow*& renderWindow);
-	void moveAsteroid(sf::Vector2f vectorSpeed);
+	void render(sf::RenderWindow* renderWindow);
+	void move(sf::Vector2f vectorSpeed);
+	void changeDirection(sf::FloatRect floatRect);
 	AsteroidType getType();
 
 private:

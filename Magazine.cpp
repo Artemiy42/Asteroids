@@ -4,54 +4,48 @@
 Magazine::Magazine()
 {
 	m_lastBullet = 0;
-	m_amount = Settings::Instance().getNumberOfAmmo();
-	m_bullets = new Bullet[m_amount];
-}
 
-Magazine::Magazine(unsigned int amount)
-{
-	if (amount < Settings::kMaxNumberOfAmmo)
-		m_amount = amount;
-	else
-		m_amount = Settings::kMaxNumberOfAmmo;
-	
-	m_lastBullet = 0;
-	m_bullets = new Bullet[m_amount];
+	for (int i = 0; i < Settings::Instance().getNumberOfAmmo(); i++)
+	{
+		m_bullets.push_back(new Bullet());
+	}
 }
 
 Magazine::~Magazine()
 {
-	delete[] m_bullets;
+	for (std::vector<Bullet*>::iterator it = m_bullets.begin(); it < m_bullets.end(); it++)
+	{
+		delete *it;
+	}
 }
 
 void Magazine::update(float deltaTime)
 {
-	for (int i = 0; i < m_amount; i++)
+	for (std::vector<Bullet*>::iterator it = m_bullets.begin(); it < m_bullets.end(); it++)
 	{
-		m_bullets[i].update(deltaTime);
+		(*it)->update(deltaTime);
 	}
 }
 
-void Magazine::render(sf::RenderWindow*& renderWindow)
+void Magazine::render(sf::RenderWindow* renderWindow)
 {
-	for (int i = 0; i < m_amount; i++)
+	for (std::vector<Bullet*>::iterator it = m_bullets.begin(); it < m_bullets.end(); it++)
 	{
-		m_bullets[i].render(renderWindow);
+		(*it)->render(renderWindow);
 	}
 }
 
 Bullet& Magazine::getNextBullet()
 {
-	if (m_lastBullet >= m_amount - 1)
+	if (m_lastBullet >= m_bullets.size() - 1)
 		m_lastBullet = 0;
+
 	std::cout << m_lastBullet << std::endl;
-	return m_bullets[m_lastBullet++];
+	
+	return *m_bullets[m_lastBullet++];
 }
 
-Bullet* Magazine::getAllBullets()
+std::vector<Bullet*> Magazine::getAllBullets()
 {
 	return m_bullets;
 }
-
-
-unsigned int Magazine::getAmountBullets() { return m_amount; }

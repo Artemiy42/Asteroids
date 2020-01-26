@@ -33,5 +33,6 @@ private:
 	ArrayAsteroids m_asteroids;
 
 	sf::View m_view;
+	sf::View view2;
 	sf::RectangleShape border;
 };

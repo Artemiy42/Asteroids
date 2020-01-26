@@ -1,6 +1,7 @@
 #include "Bullet.h"
 #include "UtilsForVector.h"
 #include "Assets.h"
+#include "Settings.h"
 
 const float Bullet::kMaxDistance = 800.0f;
 const float Bullet::kAccelerationBullet = 10.0f;
@@ -25,7 +26,7 @@ void Bullet::update(float deltaTime)
 {
 	if (m_isAlive)
 	{
-		moveBullet(m_vectorSpeed);
+		move(m_vectorSpeed);
 
 		m_distance += lengthVector(m_vectorSpeed);
 
@@ -34,16 +35,17 @@ void Bullet::update(float deltaTime)
 	}
 }
 
-void Bullet::moveBullet(sf::Vector2f vectorSpeed)
+void Bullet::move(sf::Vector2f vectorSpeed)
 {
 	sf::Vector2f bulletPosition = getPosition();
+	sf::Vector2f mapSize = Settings::Instance().getMapSize();
 
 	bulletPosition += vectorSpeed;
 
-	if (bulletPosition.x > 1000) bulletPosition.x = 0;
-	if (bulletPosition.x < 0) bulletPosition.x = 1000;
-	if (bulletPosition.y > 1000) bulletPosition.y = 0;
-	if (bulletPosition.y < 0) bulletPosition.y = 1000;
+	if (bulletPosition.x > mapSize.x) bulletPosition.x = 0;
+	if (bulletPosition.x < 0) bulletPosition.x = mapSize.x;
+	if (bulletPosition.y > mapSize.y) bulletPosition.y = 0;
+	if (bulletPosition.y < 0) bulletPosition.y = mapSize.y;
 
 	setPosition(bulletPosition);
 }
@@ -65,7 +67,7 @@ void Bullet::die()
 	m_isAlive = false;
 }
 
-void Bullet::render(sf::RenderWindow*& renderWindow)
+void Bullet::render(sf::RenderWindow* renderWindow)
 {
 	if (m_isAlive)
 	{
