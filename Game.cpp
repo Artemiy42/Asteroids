@@ -51,6 +51,7 @@ void Game::initialize()
 	m_ship.live();
 
 	Score::Instance().scoreZero();
+	Settings::Instance().firstLevel();
 }
 
 bool Game::loop()
