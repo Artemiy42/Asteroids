@@ -22,6 +22,7 @@ public:
 	bool isFire();
 	bool isAlive();
 	void die();
+	void live();
 	void fire(Bullet& bullet);
 
 private:

@@ -1,6 +1,7 @@
-#include "Game.h"
-#include <cstdlib>
 #include <iostream>
+#include <cstdlib>
+
+#include "Game.h"
 #include "Collision.h"
 #include "Settings.h"
 #include "Score.h"
@@ -43,6 +44,13 @@ void Game::setupSystem()
 void Game::initialize()
 {
 	m_isGameActive = true;
+	m_asteroids.initialize();
+
+	sf::Vector2f mapSize = Settings::Instance().getMapSize();
+	m_ship.setPosition(mapSize.x / 2, mapSize.y / 2);
+	m_ship.live();
+
+	Score::Instance().scoreZero();
 }
 
 bool Game::loop()
@@ -67,6 +75,7 @@ bool Game::loop()
 			
 			m_viewShip.setSize(windowSize);
 			m_viewScore.setSize(windowSize);
+			m_viewScore.setCenter(sf::Vector2f(m_renderWindow->getSize().x / 2, m_renderWindow->getSize().y / 2));
 		}
 	}
 
@@ -101,13 +110,16 @@ void Game::update(float deltaTime)
 		m_ship.rotate(m_ship.kAngleRotation);
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Up))
 		m_ship.addForce();
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space))
-		if (!m_ship.isFire())
-			m_ship.fire(m_magazine.getNextBullet());
+	//if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space) && !m_ship.isFire())
+	if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left) && !m_ship.isFire())
+		m_ship.fire(m_magazine.getNextBullet());
 
 	m_viewShip.setCenter(m_ship.getPosition());
+	
 	m_asteroids.intersects(m_ship, m_magazine);
-	m_isGameActive = m_ship.isAlive();
+	
+	if (!m_ship.isAlive())
+		initialize();
 
 	if (!m_asteroids.hasAliveAsteroid())
 	{

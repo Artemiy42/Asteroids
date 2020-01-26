@@ -17,6 +17,7 @@ public:
 	void render(sf::RenderWindow* renderWindow);
 	void addPoints(AsteroidType asteroidType);
 	sf::Text& getText();
+	void scoreZero();
 
 private:
 	sf::Text m_scoreText;

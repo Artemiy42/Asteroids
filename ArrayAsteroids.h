@@ -11,7 +11,6 @@ class ArrayAsteroids
 {
 public:
 	ArrayAsteroids();
-	ArrayAsteroids(unsigned int amount);
 	~ArrayAsteroids();
 	void initialize();
 	void update(float deltaTime);

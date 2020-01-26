@@ -8,7 +8,7 @@ Score::Score()
 {
 	m_scoreText.setFont(Assets::Instance().getHyperspaceFont());
 	m_scoreText.setFillColor(sf::Color::White);
-	m_scoreText.setCharacterSize(42);
+	m_scoreText.setCharacterSize(50);
 	m_scoreText.setPosition(10.f, 10.f);
 	m_numberOfPoints = 0;
 }
@@ -32,4 +32,9 @@ sf::Text& Score::getText()
 {
 	m_scoreText.setString(m_numberOfPoints);
 	return m_scoreText;
+}
+
+void Score::scoreZero()
+{
+	m_numberOfPoints = 0;
 }

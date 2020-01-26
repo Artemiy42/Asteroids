@@ -9,7 +9,6 @@ class Magazine
 {
 public:
 	Magazine();
-	Magazine(unsigned int amount);
 	~Magazine();
 
 	void update(float deltaTime);

@@ -9,7 +9,7 @@ public:
 	static const float kAccelerationBullet;
 	
 	Bullet();
-	~Bullet();
+	~Bullet() {};
 	void update(float deltaTime);
 	void move(sf::Vector2f vectorSpeed);
 	bool isAlive() const;

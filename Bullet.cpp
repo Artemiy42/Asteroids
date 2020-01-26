@@ -17,11 +17,6 @@ Bullet::Bullet()
 	m_vectorSpeed = { 0.0f, 0.0f };
 }
 
-Bullet::~Bullet()
-{
-
-}
-
 void Bullet::update(float deltaTime)
 {
 	if (m_isAlive)

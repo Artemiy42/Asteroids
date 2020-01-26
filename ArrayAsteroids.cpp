@@ -7,8 +7,6 @@
 ArrayAsteroids::ArrayAsteroids()
 {
 	m_hasAliveAsteroid = true;
-	
-	initialize();
 }
 
 ArrayAsteroids::~ArrayAsteroids()
@@ -21,6 +19,16 @@ ArrayAsteroids::~ArrayAsteroids()
 
 void ArrayAsteroids::initialize()
 {
+	if (m_asteroids.size() != 0)
+	{
+		for (std::list<Asteroid*>::iterator it = m_asteroids.begin(); it != m_asteroids.end(); it++)
+		{
+			delete *it;
+		}
+	}
+
+	m_asteroids.clear();
+
 	for (int i = 0; i < Settings::Instance().getNumberOfAsteroids(); i++)
 	{
 		m_asteroids.push_back(new Asteroid());
@@ -46,7 +54,6 @@ void ArrayAsteroids::render(sf::RenderWindow* renderWindow)
 void ArrayAsteroids::intersects(Ship& ship, Magazine& magazine)
 {
 	std::list<Asteroid*>::iterator itAsteroid = m_asteroids.begin();
-	//std::vector<Bullet*> bulletArray = magazine.getAllBullets();
 	
 	while (itAsteroid != m_asteroids.end())
 	{
@@ -54,16 +61,13 @@ void ArrayAsteroids::intersects(Ship& ship, Magazine& magazine)
 
 		if (Collision::PixelPerfectTest(ship, **itAsteroid))
 		{
-			std::cout << "Collision ship with asteroid" << std::endl;
-		//	ship.die();
+			ship.die();
 		}
 
 		for (std::list<Asteroid*>::iterator itOtherAsteroid = m_asteroids.begin(); itOtherAsteroid != m_asteroids.end(); itOtherAsteroid++)
 		{
-		//	if (itOtherAsteroid != itAsteroid && (*itAsteroid)->getGlobalBounds().intersects((*itOtherAsteroid)->getGlobalBounds()))
 			if (itOtherAsteroid != itAsteroid && Collision::PixelPerfectTest(**itAsteroid, **itOtherAsteroid))
 			{
-				std::cout << "Collision asteroid with asteroid" << std::endl;
 				(*itAsteroid)->changeDirection((*itOtherAsteroid)->getGlobalBounds());
 				(*itOtherAsteroid)->changeDirection((*itAsteroid)->getGlobalBounds());
 			}
@@ -85,8 +89,6 @@ bool ArrayAsteroids::intersectsWithBullet(std::list<Asteroid*>::iterator& itAste
 	{
 		if ((*itAsteroid)->getGlobalBounds().intersects((*itBullet)->getGlobalBounds()) && (*itBullet)->isAlive())
 		{
-			std::cout << "Collision bullet with asteroid" << std::endl;
-			
 			if ((*itAsteroid)->getType() == AsteroidType::Big)
 			{
 				m_asteroids.push_back(new Asteroid(AsteroidType::Small, (*itAsteroid)->getPosition()));

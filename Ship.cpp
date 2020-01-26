@@ -92,6 +92,11 @@ void Ship::die()
 	m_isAlive = false;
 }
 
+void Ship::live()
+{
+	m_isAlive = true;
+}
+
 void Ship::fire(Bullet& bullet)
 {
 	bullet.setPosition(getPosition());
