@@ -1,6 +1,7 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 
 class Assets
 {
@@ -17,6 +18,7 @@ public:
 	sf::Image getCatAsteroidSmall();
 	sf::Image getCatAsteroidBig();
 	sf::Font& getHyperspaceFont();
+	sf::SoundBuffer& getSoundBufferFire();
 
 private:
 	Assets() {};
@@ -30,5 +32,5 @@ private:
 	sf::Image m_catAsteroidSmall;
 	sf::Image m_catAsteroidBig;
 	sf::Font m_hyperSpaceFont;
-
+	sf::SoundBuffer m_soundBufferFire;
 };

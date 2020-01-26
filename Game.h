@@ -32,7 +32,7 @@ private:
 	Magazine m_magazine;
 	ArrayAsteroids m_asteroids;
 
-	sf::View m_view;
-	sf::View view2;
+	sf::View m_viewShip;
+	sf::View m_viewScore;
 	sf::RectangleShape border;
 };

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include "Bullet.h"
 
 class Ship : public sf::Sprite
@@ -26,6 +27,7 @@ public:
 private:
 	sf::Texture m_texture;
 	sf::Vector2f m_vectorSpeed;
+	sf::Sound sound;
 	float m_timeCooldown;
 	bool m_isFire;
 	bool m_isAlive;

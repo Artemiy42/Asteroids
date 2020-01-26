@@ -29,15 +29,15 @@ void Game::setupSystem()
 
 	sf::Vector2f videoModeSize = Settings::Instance().getSizeVideoMode();
 
-	m_view = sf::View(sf::Vector2f(0.f, 0.f), videoModeSize);
+	m_viewShip = sf::View(sf::Vector2f(0.f, 0.f), videoModeSize);
 
 	border.setSize(Settings::Instance().getMapSize());
 	border.setPosition(0, 0);
 	border.setOutlineThickness(5);
 	border.setFillColor(sf::Color::Black);
 
-	view2 = sf::View(sf::Vector2f(0.f, 0.f), videoModeSize);
-	view2.setCenter(sf::Vector2f(videoModeSize.x/2, videoModeSize.y/2));
+	m_viewScore = sf::View(sf::Vector2f(0.f, 0.f), videoModeSize);
+	m_viewScore.setCenter(sf::Vector2f(videoModeSize.x/2, videoModeSize.y/2));
 }
 
 void Game::initialize()
@@ -65,7 +65,8 @@ bool Game::loop()
 		{
 			sf::Vector2f windowSize(m_renderWindow->getSize().x, m_renderWindow->getSize().y);
 			
-			m_view.setSize(windowSize);
+			m_viewShip.setSize(windowSize);
+			m_viewScore.setSize(windowSize);
 		}
 	}
 
@@ -78,12 +79,12 @@ bool Game::loop()
 void Game::render()
 {
 	m_renderWindow->clear();
-	m_renderWindow->setView(m_view);
+	m_renderWindow->setView(m_viewShip);
 	m_renderWindow->draw(border);
 	m_ship.render(m_renderWindow);
 	m_magazine.render(m_renderWindow);
 	m_asteroids.render(m_renderWindow);
-	m_renderWindow->setView(view2);
+	m_renderWindow->setView(m_viewScore);
 	Score::Instance().render(m_renderWindow);
 	m_renderWindow->display();
 }
@@ -101,12 +102,18 @@ void Game::update(float deltaTime)
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Up))
 		m_ship.addForce();
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space))
- 		if (!m_ship.isFire())
+		if (!m_ship.isFire())
 			m_ship.fire(m_magazine.getNextBullet());
-	
-	m_view.setCenter(m_ship.getPosition());
+
+	m_viewShip.setCenter(m_ship.getPosition());
 	m_asteroids.intersects(m_ship, m_magazine);
 	m_isGameActive = m_ship.isAlive();
+
+	if (!m_asteroids.hasAliveAsteroid())
+	{
+		Settings::Instance().newLevel();
+		m_asteroids.initialize();
+	}
 }
 
 void Game::shutdown()

@@ -5,12 +5,14 @@ void Assets::load()
 {
 	const static std::string pathImage = "res\\img\\";
 	const static std::string pathFont = "res\\font\\";
+	const static std::string pathSound = "res\\sound\\";
 
 	if (!m_ship.loadFromFile(pathImage + "Ship.png")) throw;
 	if (!m_bullet.loadFromFile(pathImage + "BulletFish.png")) throw;
 	if (!m_catAsteroidSmall.loadFromFile(pathImage + "catAsteroidSmall.png")) throw;
 	if (!m_catAsteroidBig.loadFromFile(pathImage + "catAsteroidBig.png")) throw;
 	if (!m_hyperSpaceFont.loadFromFile(pathFont + "Hyperspace.otf")) throw;
+	if (!m_soundBufferFire.loadFromFile(pathSound + "Fire.wav")) throw;
 }
 
 sf::Image Assets::getBullet()
@@ -36,4 +38,9 @@ sf::Image Assets::getCatAsteroidBig()
 sf::Font& Assets::getHyperspaceFont()
 {
 	return m_hyperSpaceFont;
+}
+
+sf::SoundBuffer& Assets::getSoundBufferFire()
+{
+	return m_soundBufferFire;
 }

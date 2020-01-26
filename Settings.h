@@ -9,6 +9,7 @@ public:
 	static const unsigned int kMaxMapHeight = 5000;
 	static const unsigned int kMaxNumberOfAsteroids = 500;
 	static const unsigned int kMaxNumberOfAmmo = 50;
+	static const unsigned int kNewAsteroids = 3;
 
 	static Settings& Instance()
 	{
@@ -55,6 +56,11 @@ public:
 	
 	void setAbilityProbability(float abilityProbability) { m_abilityProbability = abilityProbability; }
 	float getAbilityProbability() { return m_abilityProbability; }
+
+	void newLevel()
+	{
+		m_numberOfAsteroids += kNewAsteroids;
+	}
 
 private:
 	Settings()

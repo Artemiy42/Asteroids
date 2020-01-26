@@ -8,25 +8,7 @@ ArrayAsteroids::ArrayAsteroids()
 {
 	m_hasAliveAsteroid = true;
 	
-	for (int i = 0; i < Settings::Instance().getNumberOfAsteroids(); i++)
-	{
-		m_asteroids.push_back(new Asteroid());
-	}
-}
-
-ArrayAsteroids::ArrayAsteroids(unsigned int amount)
-{
-	if (amount > Settings::kMaxNumberOfAsteroids)
-	{
-		amount = Settings::kMaxNumberOfAsteroids;
-	}
-	
-	m_hasAliveAsteroid = true;
-
-	for (int i = 0; i < amount; i++)
-	{
-		m_asteroids.push_back(new Asteroid());
-	}
+	initialize();
 }
 
 ArrayAsteroids::~ArrayAsteroids()
@@ -34,6 +16,14 @@ ArrayAsteroids::~ArrayAsteroids()
 	for (std::list<Asteroid*>::iterator it = m_asteroids.begin(); it != m_asteroids.end(); it++)
 	{
 		delete *it;
+	}
+}
+
+void ArrayAsteroids::initialize()
+{
+	for (int i = 0; i < Settings::Instance().getNumberOfAsteroids(); i++)
+	{
+		m_asteroids.push_back(new Asteroid());
 	}
 }
 
@@ -70,22 +60,6 @@ void ArrayAsteroids::intersects(Ship& ship, Magazine& magazine)
 
 		for (std::list<Asteroid*>::iterator itOtherAsteroid = m_asteroids.begin(); itOtherAsteroid != m_asteroids.end(); itOtherAsteroid++)
 		{
-			/*if ((*itAsteroid)->getGlobalBounds().intersects((*itOtherAsteroid)->getGlobalBounds()) && (*itOtherAsteroid)->isAlive())
-			{
-				std::cout << "Collision bullet with asteroid" << std::endl;
-
-				if ((*itAsteroid)->getType() == AsteroidType::Big)
-				{
-					m_asteroids.push_back(new Asteroid(AsteroidType::Small, (*itAsteroid)->getPosition()));
-					m_asteroids.push_back(new Asteroid(AsteroidType::Small, (*itAsteroid)->getPosition()));
-				}
-
-				(*itBullet)->die();
-				itAsteroid = m_asteroids.erase(itAsteroid);
-				isDelete = true;
-
-				break;
-			}*/
 		//	if (itOtherAsteroid != itAsteroid && (*itAsteroid)->getGlobalBounds().intersects((*itOtherAsteroid)->getGlobalBounds()))
 			if (itOtherAsteroid != itAsteroid && Collision::PixelPerfectTest(**itAsteroid, **itOtherAsteroid))
 			{
@@ -120,7 +94,8 @@ bool ArrayAsteroids::intersectsWithBullet(std::list<Asteroid*>::iterator& itAste
 			}
 
 			(*itBullet)->die();
-			Score::Instance().addPoints((*itAsteroid)->getType());			
+			Score::Instance().addPoints((*itAsteroid)->getType());
+			delete *itAsteroid;
 			itAsteroid = m_asteroids.erase(itAsteroid);
 			isDelete = true;
 

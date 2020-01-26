@@ -13,6 +13,7 @@ public:
 	ArrayAsteroids();
 	ArrayAsteroids(unsigned int amount);
 	~ArrayAsteroids();
+	void initialize();
 	void update(float deltaTime);
 	void render(sf::RenderWindow* renderWindow);
 	void intersects(Ship& ship, Magazine& magazine);

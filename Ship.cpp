@@ -14,6 +14,8 @@ Ship::Ship()
 {	
 	m_texture.loadFromImage(Assets::Instance().getShip());
 	setTexture(m_texture);
+
+	sound.setBuffer(Assets::Instance().getSoundBufferFire());
 	
 	sf::IntRect textureRect = getTextureRect();
 	setOrigin(textureRect.width / 2.f, textureRect.height / 2.f);
@@ -95,5 +97,6 @@ void Ship::fire(Bullet& bullet)
 	bullet.setPosition(getPosition());
 	bullet.setRotation(getRotation());
 	bullet.wakeUp();
+	sound.play();
 	m_isFire = true;
 }
