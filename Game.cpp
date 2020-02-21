@@ -92,7 +92,6 @@ void Game::render()
 	m_renderWindow->setView(m_viewShip);
 	m_renderWindow->draw(border);
 	m_ship.render(m_renderWindow);
-	m_magazine.render(m_renderWindow);
 	m_asteroids.render(m_renderWindow);
 	m_renderWindow->setView(m_viewScore);
 	Score::Instance().render(m_renderWindow);
@@ -102,22 +101,14 @@ void Game::render()
 void Game::update(float deltaTime)
 {
 	m_ship.update(deltaTime);
-	m_magazine.update(deltaTime);
 	m_asteroids.update(deltaTime);
 
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Left))
-		m_ship.rotate(-m_ship.kAngleRotation);
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Right))
-		m_ship.rotate(m_ship.kAngleRotation);
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Up))
-		m_ship.addForce();
-	//if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space) && !m_ship.isFire())
-	if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left) && !m_ship.isFire())
-		m_ship.fire(m_magazine.getNextBullet());
+	Command* command = m_inputHandler.handleInput();
+	command->execute(&m_ship);
 
 	m_viewShip.setCenter(m_ship.getPosition());
 	
-	m_asteroids.intersects(m_ship, m_magazine);
+	m_asteroids.intersects(m_ship, m_ship.getMagazine());
 	
 	if (!m_ship.isAlive())
 		initialize();

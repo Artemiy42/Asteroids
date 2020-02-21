@@ -4,6 +4,7 @@
 #include <ctime>
 #include <list>
 
+#include "InputHandler.h"
 #include "Ship.h"
 #include "Asteroid.h"
 #include "Magazine.h"
@@ -29,10 +30,11 @@ private:
 
 	sf::RenderWindow* m_renderWindow;
 	Ship m_ship;
-	Magazine m_magazine;
 	ArrayAsteroids m_asteroids;
 
 	sf::View m_viewShip;
 	sf::View m_viewScore;
 	sf::RectangleShape border;
+
+	InputHandler m_inputHandler;
 };

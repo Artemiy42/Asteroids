@@ -2,7 +2,7 @@
 
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
-#include "Bullet.h"
+#include "Magazine.h"
 
 class Ship : public sf::Sprite
 {
@@ -23,7 +23,9 @@ public:
 	bool isAlive();
 	void die();
 	void live();
-	void fire(Bullet& bullet);
+	void fire();
+
+	Magazine& getMagazine();
 
 private:
 	sf::Texture m_texture;
@@ -32,4 +34,6 @@ private:
 	float m_timeCooldown;
 	bool m_isFire;
 	bool m_isAlive;
+	
+	Magazine m_magazine;
 };

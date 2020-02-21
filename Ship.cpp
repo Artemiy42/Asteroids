@@ -24,7 +24,7 @@ Ship::Ship()
 	mapSize.x /= 2;
 	mapSize.y /= 2;
 	setPosition(mapSize);
-	
+
 	m_vectorSpeed = { 0, 0 };
 	m_timeCooldown = 0;
 	m_isFire = false;
@@ -33,6 +33,8 @@ Ship::Ship()
 
 void Ship::update(float deltaTime)
 {
+	m_magazine.update(deltaTime);
+
 	move(m_vectorSpeed * deltaTime);
 
 	m_vectorSpeed -= m_vectorSpeed * kResistance;
@@ -52,6 +54,7 @@ void Ship::update(float deltaTime)
 void Ship::render(sf::RenderWindow* renderWindow)
 {
 	renderWindow->draw(*this);
+	m_magazine.render(renderWindow);
 }
 
 void Ship::addForce()
@@ -97,11 +100,20 @@ void Ship::live()
 	m_isAlive = true;
 }
 
-void Ship::fire(Bullet& bullet)
+void Ship::fire()
 {
+	Bullet& bullet = m_magazine.getNextBullet();
+
 	bullet.setPosition(getPosition());
 	bullet.setRotation(getRotation());
 	bullet.wakeUp();
+	
 	sound.play();
+
 	m_isFire = true;
+}
+
+Magazine& Ship::getMagazine()
+{
+	return m_magazine;
 }

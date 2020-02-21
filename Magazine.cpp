@@ -1,5 +1,4 @@
 #include "Magazine.h"
-#include <iostream>
 
 Magazine::Magazine()
 {
@@ -40,8 +39,6 @@ Bullet& Magazine::getNextBullet()
 	if (m_lastBullet >= m_bullets.size() - 1)
 		m_lastBullet = 0;
 
-	std::cout << m_lastBullet << std::endl;
-	
 	return *m_bullets[m_lastBullet++];
 }
 
